@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Endereco {
+  endereco_id Int     @id @default(autoincrement())
+  estado      String
+  cidade      String
+  bairro      String
+  cep         String  @db.Char(8)
+  observacao  String?
+
+  usuario Usuario?
+}
+
+model Cargo {
+  cargo_id   Int       @id @default(autoincrement())
+  cargo_nome String
+  usuarios   Usuario[]
+}
+
+model Usuario {
+  usuario_id      Int      @id @default(autoincrement())
+  usuario_nome    String
+  usuario_cpf     String   @unique
+  usuario_email   String   @unique
+  usuario_senha   String
+  data_nascimento DateTime @db.Date
+
+  endereco_id Int      @unique
+  endereco    Endereco @relation(fields: [endereco_id], references: [endereco_id])
+
+  tem_carro Boolean
+
+  cargo_id Int
+  cargo    Cargo @relation(fields: [cargo_id], references: [cargo_id])
+
+  doacoes Doacao[]
+}
+
+model Doacao {
+  doacao_id    Int      @id @default(autoincrement())
+  data_doacao  DateTime @db.Date
+  valor_doacao Float?
+  observacao   String?
+
+  usuario_id Int
+  usuario    Usuario @relation(fields: [usuario_id], references: [usuario_id])
+}
