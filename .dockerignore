@@ -1,0 +1,15 @@
+# Ignore código fonte TS, pois você só usa dist no container
+src/
+*.ts
+*.tsx
+*.map
+
+# Ignore node_modules para garantir instalação fresh no container
+node_modules
+
+# Ignore Dockerfile e configs locais
+Dockerfile
+.dockerignore
+
+# Arquivo de ambiente local (você pode copiar ou não, dependendo do uso)
+.env

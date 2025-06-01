@@ -6,18 +6,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const db_1 = __importDefault(require("../db"));
-const registerUser = ({ nome, cpf, email, password }) => {
+const prismaClient_1 = __importDefault(require("../prismaClient"));
+const registerUser = async ({ nome, cpf, email, password, data_nascimento, cargo_id, tem_carro, cep, }) => {
     const hashedPassword = bcryptjs_1.default.hashSync(password, 10);
-    const insertUser = db_1.default.prepare(`INSERT INTO usuario (usuario_nome, usuario_cpf, usuario_email, usuario_senha) VALUES (?, ?, ?, ?)`);
-    const result = insertUser.run(nome, cpf, email, hashedPassword);
-    const token = jsonwebtoken_1.default.sign({ id: result.lastInsertRowid }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const user = await prismaClient_1.default.usuario.create({
+        data: {
+            usuario_nome: nome,
+            usuario_email: email,
+            usuario_cpf: cpf,
+            usuario_senha: hashedPassword,
+            data_nascimento: data_nascimento,
+            tem_carro: tem_carro,
+            usuario_cep: cep,
+            cargo_id: cargo_id,
+        },
+    });
+    const token = jsonwebtoken_1.default.sign({ id: user.usuario_id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+    });
     return token;
 };
 exports.registerUser = registerUser;
-const loginUser = ({ email, password }) => {
-    const getUser = db_1.default.prepare(`SELECT * FROM usuario WHERE usuario_email = ?`);
-    const user = getUser.get(email);
+const loginUser = async ({ email, password, }) => {
+    const user = await prismaClient_1.default.usuario.findUnique({
+        where: {
+            usuario_email: email,
+        },
+    });
     if (!user) {
         return { success: false, reason: "USER_NOT_FOUND" };
     }

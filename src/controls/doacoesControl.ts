@@ -10,7 +10,7 @@ const handleGetbyId = async (req: Request, res: Response) => {
   const usuario_id = req.params.id;
   try {
     if (usuario_id) {
-      const doacoes = await getDoacoesbyId(usuario_id);
+      const doacoes = await getDoacoesbyId(parseInt(usuario_id));
       res.json(doacoes);
     } else {
       res.json({

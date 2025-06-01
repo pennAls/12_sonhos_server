@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,21 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Endereco {
-  endereco_id Int     @id @default(autoincrement())
-  estado      String
-  cidade      String
-  bairro      String
-  cep         String  @db.Char(8)
-  observacao  String?
-
-  usuario Usuario?
-}
-
 model Cargo {
   cargo_id   Int       @id @default(autoincrement())
   cargo_nome String
   usuarios   Usuario[]
+
+  @@map("cargo")
 }
 
 model Usuario {
@@ -38,9 +28,7 @@ model Usuario {
   usuario_email   String   @unique
   usuario_senha   String
   data_nascimento DateTime @db.Date
-
-  endereco_id Int      @unique
-  endereco    Endereco @relation(fields: [endereco_id], references: [endereco_id])
+  usuario_cep     String
 
   tem_carro Boolean
 
@@ -48,6 +36,8 @@ model Usuario {
   cargo    Cargo @relation(fields: [cargo_id], references: [cargo_id])
 
   doacoes Doacao[]
+
+  @@map("usuario")
 }
 
 model Doacao {
@@ -58,4 +48,6 @@ model Doacao {
 
   usuario_id Int
   usuario    Usuario @relation(fields: [usuario_id], references: [usuario_id])
+
+  @@map("doacao")
 }

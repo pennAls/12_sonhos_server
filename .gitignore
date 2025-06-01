@@ -1,5 +1,9 @@
-node_modules
-# Keep environment variables out of version control
+# Dependências e builds
+node_modules/
+dist/
+
+# Arquivos sensíveis
 .env
 
-/src/generated/prisma
+# Dados persistentes do Postgres (Docker volume)
+postgres-data/

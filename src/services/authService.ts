@@ -7,6 +7,10 @@ interface RegisterData {
   cpf: string;
   email: string;
   password: string;
+  data_nascimento: string;
+  tem_carro: boolean;
+  cep: string;
+  cargo_id: number;
 }
 
 interface LoginData {
@@ -19,6 +23,10 @@ export const registerUser = async ({
   cpf,
   email,
   password,
+  data_nascimento,
+  cargo_id,
+  tem_carro,
+  cep,
 }: RegisterData) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
   const user = await prisma.usuario.create({
@@ -27,10 +35,14 @@ export const registerUser = async ({
       usuario_email: email,
       usuario_cpf: cpf,
       usuario_senha: hashedPassword,
+      data_nascimento: data_nascimento,
+      tem_carro: tem_carro,
+      usuario_cep: cep,
+      cargo_id: cargo_id,
     },
   });
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+  const token = jwt.sign({ id: user.usuario_id }, process.env.JWT_SECRET!, {
     expiresIn: "1h",
   });
 
@@ -45,7 +57,7 @@ export const loginUser = async ({
   email,
   password,
 }: LoginData): Promise<LoginResult> => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.usuario.findUnique({
     where: {
       usuario_email: email,
     },
