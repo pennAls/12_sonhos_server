@@ -26,18 +26,27 @@ model Usuario {
   usuario_nome    String
   usuario_cpf     String   @unique
   usuario_email   String   @unique
-  usuario_senha   String
+  usuario_senha   String // Senha obrigatória para usuários do sistema
   data_nascimento DateTime @db.Date
   usuario_cep     String
-
-  tem_carro Boolean
-
-  cargo_id Int
-  cargo    Cargo @relation(fields: [cargo_id], references: [cargo_id])
-
-  doacoes Doacao[]
+  tem_carro       Boolean
+  cargo_id        Int
+  cargo           Cargo    @relation(fields: [cargo_id], references: [cargo_id])
 
   @@map("usuario")
+}
+
+model Doador {
+  doador_id       Int      @id @default(autoincrement())
+  doador_nome     String
+  doador_cpf      String   @unique
+  doador_email    String   @unique
+  data_nascimento DateTime @db.Date
+  doador_cep      String
+  tem_carro       Boolean
+  doacoes         Doacao[]
+
+  @@map("doador")
 }
 
 model Doacao {
@@ -45,9 +54,8 @@ model Doacao {
   data_doacao  DateTime @db.Date
   valor_doacao Float?
   observacao   String?
-
-  usuario_id Int
-  usuario    Usuario @relation(fields: [usuario_id], references: [usuario_id])
+  doador_id    Int
+  doador       Doador   @relation(fields: [doador_id], references: [doador_id])
 
   @@map("doacao")
 }

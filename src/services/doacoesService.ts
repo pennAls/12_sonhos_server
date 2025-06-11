@@ -3,7 +3,7 @@ import prisma from "../prismaClient";
 export const getDoacoesbyId = async (id: number) => {
   const doacoes = await prisma.doacao.findMany({
     where: {
-      usuario_id: id,
+      doador_id: id,
     },
   });
   return doacoes;

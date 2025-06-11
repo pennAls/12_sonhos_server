@@ -42,9 +42,13 @@ export const registerUser = async ({
     },
   });
 
-  const token = jwt.sign({ id: user.usuario_id }, process.env.JWT_SECRET!, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { id: user.usuario_id, cargo: cargo_id, nome: nome },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "1h",
+    }
+  );
 
   return token;
 };
@@ -76,9 +80,13 @@ export const loginUser = async ({
     return { success: false, reason: "INVALID_PASSWORD" };
   }
 
-  const token = jwt.sign({ id: user.usuario_id }, process.env.JWT_SECRET!, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { id: user.usuario_id, cargo: user.cargo_id, nome: user.usuario_nome },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "1h",
+    }
+  );
 
   return { success: true, token: token };
 };
