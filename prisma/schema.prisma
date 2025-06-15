@@ -55,7 +55,7 @@ model Doacao {
   valor_doacao Float?
   observacao   String?
   doador_id    Int
-  doador       Doador   @relation(fields: [doador_id], references: [doador_id])
+  doador       Doador   @relation(fields: [doador_id], references: [doador_id], onDelete: Cascade)
 
   @@map("doacao")
 }

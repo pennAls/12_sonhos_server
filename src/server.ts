@@ -5,8 +5,9 @@ import loginRoute from "./routes/loginRoute";
 import dashboardRoute from "./routes/dashboardRoute";
 import authMiddleware from "./middleware/authMiddleware";
 import doacoesRoute from "./routes/doacoesRoute";
+import donorsRoute from "./routes/donorsRoute";
 const app = express();
-const PORT = process.env.PORT || 8483;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(
@@ -18,6 +19,7 @@ app.use("/auth", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/dashboard", authMiddleware, dashboardRoute);
 app.use("/dashboard", authMiddleware, doacoesRoute);
+app.use("/donor", authMiddleware, donorsRoute);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);

@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   handleDeletebyId,
   handleGetbyId,
-  handlePostbyId,
+  handlePost,
   handlePutbyId,
 } from "../controls/doacoesControl";
 import permissionMiddleware from "../middleware/permissionMiddleware";
@@ -10,7 +10,7 @@ import permissionMiddleware from "../middleware/permissionMiddleware";
 const router = Router();
 
 router.get("/doacoes/:id", handleGetbyId);
-router.post("/doacoes/:id", permissionMiddleware, handlePostbyId);
+router.post("/doacoes/:id", handlePost);
 router.put("/doacoes/:id", permissionMiddleware, handlePutbyId);
-router.delete("/doacoes/:id", permissionMiddleware, handleDeletebyId);
+router.delete("/doacoes/:id", handleDeletebyId);
 export default router;

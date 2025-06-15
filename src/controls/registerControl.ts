@@ -34,8 +34,4 @@ const handlePost = async (req: Request, res: Response) => {
   }
 };
 
-const handleGet = (req: Request, res: Response) => {
-  res.status(200).send("<h1> Rota Registro </h1>");
-};
-
-export { handlePost, handleGet };
+export { handlePost };

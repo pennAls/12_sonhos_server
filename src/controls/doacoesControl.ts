@@ -27,10 +27,12 @@ const handleGetbyId = async (req: Request, res: Response) => {
   }
 };
 
-const handlePostbyId = async (req: Request, res: Response) => {
-  const usuario_id = req.params.id;
+const handlePost = async (req: Request, res: Response) => {
+  const { valor_doacao, data_doacao, observacao } = req.body;
+  const doador_id = req.params.id;
   try {
-    await addDoacoesbyId(usuario_id);
+    await addDoacoesbyId({ valor_doacao, data_doacao, observacao, doador_id });
+    res.status(201).json({ message: "Doação adicionada ao Doador" });
   } catch (error) {
     if (error instanceof Error) {
       res.status(503).send(error.message);
@@ -52,9 +54,10 @@ const handlePutbyId = async (req: Request, res: Response) => {
   }
 };
 const handleDeletebyId = async (req: Request, res: Response) => {
-  const usuario_id = req.params.id;
+  const doacao_id = req.params.id;
   try {
-    await deleteDoacoesbyId(usuario_id);
+    await deleteDoacoesbyId(doacao_id);
+    res.status(204).json({ message: "Doação Excluída com Sucesso" });
   } catch (error) {
     if (error instanceof Error) {
       res.status(503).send(error.message);
@@ -64,4 +67,4 @@ const handleDeletebyId = async (req: Request, res: Response) => {
   }
 };
 
-export { handleGetbyId, handleDeletebyId, handlePutbyId, handlePostbyId };
+export { handleGetbyId, handleDeletebyId, handlePutbyId, handlePost };
