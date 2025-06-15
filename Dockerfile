@@ -1,20 +1,39 @@
-# Use and official node.js runtime as a parent image
-FROM node:22-alpine
+FROM node:22 AS builder
 
-# Set the working directory in the container
+# Define o diretório de trabalho
 WORKDIR /app
 
-# Copy the package.json and the package.lock.json to the container
-COPY package*.json .
+# Copia os arquivos de dependência
+COPY package*.json ./
 
-# Install the dependencies
+# Instala TODAS as dependências, incluindo as de desenvolvimento como o 'typescript'
 RUN npm install
 
-# Copy the rest of the application code
+# Copia o resto do seu código-fonte (.ts, tsconfig.json, etc.)
 COPY . .
 
-# Expose the port that the app runs on
+# Roda o script de build para criar a pasta /dist
+# Garanta que no seu package.json, o script "build" executa o "tsc"
+RUN npm run build
+
+
+FROM node:22-alpine
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Copia os arquivos de dependência
+COPY package*.json ./
+
+# Instala APENAS as dependências de PRODUÇÃO
+RUN npm install --omit=dev
+
+# A MÁGICA ACONTECE AQUI:
+# Copia APENAS a pasta 'dist' que foi gerada no estágio 'builder'
+COPY --from=builder /app/dist ./dist
+
+# Expõe a porta que a sua aplicação vai rodar
 EXPOSE 8483
 
-# Define the command to run your application
-CMD ["node" , "./dist/server.js"]
+# Define o comando para iniciar a aplicação, usando o código já compilado
+CMD ["node", "./dist/server.js"]
