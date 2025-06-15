@@ -36,4 +36,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 8483
 
 # Define o comando para iniciar a aplicação, usando o código já compilado
-CMD ["node", "./dist/server.js"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && node dist/server.js"]
