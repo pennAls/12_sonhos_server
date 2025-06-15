@@ -32,6 +32,9 @@ RUN npm install --omit=dev
 # Copia APENAS a pasta 'dist' que foi gerada no estágio 'builder'
 COPY --from=builder /app/dist ./dist
 
+COPY --from=builder /app/prisma ./prisma
+
+
 # Expõe a porta que a sua aplicação vai rodar
 EXPOSE 8483
 
