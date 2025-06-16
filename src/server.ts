@@ -12,7 +12,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://12-sonhos.vercel.app/",
+    origin: "https://12-sonhos.vercel.app",
   })
 );
 app.use("/auth", registerRoute);
