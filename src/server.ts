@@ -10,11 +10,28 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: "https://12-sonhos.vercel.app/",
-  })
-);
+
+const allowedOrigins = [
+  "https://12-sonhos.vercel.app",
+  "http://localhost:5173",
+];
+
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
+    // Permite requisições da sua lista E também requisições sem origem (como do Postman)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Acesso não permitido pelo CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
 app.use("/auth", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/dashboard", authMiddleware, dashboardRoute);
